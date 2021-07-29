@@ -4,7 +4,7 @@
 import cv2
 import numpy as np
 
-import ipynb.fs.full.utlis as utlis
+import utlis as utlis
 
 
 ###############################################################
