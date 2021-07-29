@@ -38,7 +38,7 @@ def stackImages(imgArray,scale,lables=[]):
         for d in range(0, rows):
             for c in range (0,cols):
                 cv2.rectangle(ver,(c*eachImgWidth,eachImgHeight*d),(c*eachImgWidth+len(lables[d])*13+27,30+eachImgHeight*d),(255,255,255),cv2.FILLED)
-                cv2.putText(ver,lables[d],(eachImgWidth*c+10,eachImgHeight*d+20),cv2.FONT_HERSHEY_COMPLEX,0.7,(255,0,255),2)
+                cv2.putText(ver,lables[0][d],(eachImgWidth*c+10,eachImgHeight*d+20),cv2.FONT_HERSHEY_COMPLEX,0.7,(255,0,255),2)
     return ver
  
 def reorder(myPoints):
@@ -80,13 +80,12 @@ def drawRectangle(img,biggest,thickness):
 def nothing(x):
     pass
  
-def initializeTrackbars(intialTracbarVals=0):
+def initializeTrackbars(intialTrackbarVals=0):
     cv2.namedWindow("Trackbars")
     cv2.resizeWindow("Trackbars", 360, 240)
     cv2.createTrackbar("Threshold1", "Trackbars", 200, 255, nothing)
     cv2.createTrackbar("Threshold2", "Trackbars", 200, 255, nothing)
- 
- 
+
 def valTrackbars():
     Threshold1 = cv2.getTrackbarPos("Threshold1", "Trackbars")
     Threshold2 = cv2.getTrackbarPos("Threshold2", "Trackbars")
