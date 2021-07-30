@@ -102,7 +102,7 @@ if 0 ==0:
 
     coordinategrid = []
 
-    for i in range(0,21,1):
+    for i in range(0,20,1):
         coordinategrid.append(firstrowcoordinates + i * rowdownone)
 
     coordinategrid = np.round(np.array(coordinategrid)).astype(int)
@@ -110,7 +110,14 @@ if 0 ==0:
     for i in range(0,20,1):
         for k in range(0,10,1):
             imgBigContour = utlis.drawRectangle(imgBigContour,np.array(coordinategrid[i][k]),2)
-
+            biggest = np.array(coordinategrid[i][k])
+            pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
+            pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
+            matrix = cv2.getPerspectiveTransform(pts1, pts2)
+            imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
+            imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
+            imgWarpColored = cv2.resize(imgWarpColored,(50,50))
+            cv2.imwrite("Scanned/myImage("+str(i)+","+str(k)+").jpg",imgWarpColored)
 
     blocks = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]])
     imgBigContour = utlis.drawRectangle(imgBigContour,blocks,2)

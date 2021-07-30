@@ -3,22 +3,19 @@
 
 import cv2
 import numpy as np
-
+from utils.colorutils import get_dominant_color
 import utlis as utlis
 
 
 ###############################################################
 
-pathImage = "index.jpeg"
+pathImage = "Scanned/myImage1.jpg"
 cap = cv2.VideoCapture(0)
 cap.set(10,160)
 heightImg = 1200
 widthImg  = 1599
 thres = 20,70
 ########################################################################
- 
-utlis.initializeTrackbars()
-count=0
  
 if 0 ==0:
  
@@ -72,13 +69,13 @@ if 0 ==0:
         imageArray = ([img,imgGray,imgThreshold,imgContours],
                       [imgBlank, imgBlank, imgBlank, imgBlank])
  
-    xcoordinatecol1 = 10.0 / 1200.0 * widthImg
-    blockwidth = 95.0 / 1200.0 * widthImg
-    blockwidthsep = 30.0 / 1200.0 * widthImg
-    blocksepcol = 109.0 / 1200.0 * widthImg
-    ycoordinaterow1 = 47.5 / 1599.0 * heightImg
-    blockheight = 35.0 / 1599.0 * heightImg
-    blockheightsep = 24.0 / 1599.0 * heightImg
+    xcoordinatecol1 = 10.0 / 1599.0 * widthImg
+    blockwidth = 95.0 / 1599.0 * widthImg
+    blockwidthsep = 30.0 / 1599.0 * widthImg
+    blocksepcol = 109.0 / 1599.0 * widthImg
+    ycoordinaterow1 = 47.5 / 1200.0 * heightImg
+    blockheight = 35.0 / 1200.0 * heightImg
+    blockheightsep = 24.0 / 1200.0 * heightImg
 
     blockrightone = np.array([[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]]])
     blockjumpcolumn = np.array([[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]]])
@@ -89,7 +86,6 @@ if 0 ==0:
         rowdownone.append(blockdownone)
 
     rowdownone = np.array(rowdownone)
-    print("hello")
 
     firstrowcoordinates = np.zeros(10)
     firstrowcoordinates = [blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone]
@@ -103,39 +99,48 @@ if 0 ==0:
 
     coordinategrid = []
 
-    for i in range(0,21,1):
+    for i in range(0,20,1):
         coordinategrid.append(firstrowcoordinates + i * rowdownone)
 
     coordinategrid = np.round(np.array(coordinategrid)).astype(int)
-    print(coordinategrid)
-
-
 
     for i in range(0,20,1):
         for k in range(0,10,1):
-            print(coordinategrid[i][k])
             imgBigContour = utlis.drawRectangle(imgBigContour,np.array(coordinategrid[i][k]),2)
+            biggest = np.array(coordinategrid[i][k])
+            pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
+            pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
+            matrix = cv2.getPerspectiveTransform(pts1, pts2)
+            imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
+            imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
+            imgWarpColored = cv2.resize(imgWarpColored,(50,50))
+
+            hsv_image = cv2.cvtColor(imgWarpColored, cv2.COLOR_BGR2HSV)
+
+            # extract dominant color
+            # (aka the centroid of the most popular k means cluster)
+            dom_color = get_dominant_color(hsv_image, k=3)
+            
+            # create a square showing dominant color of equal size to input image
+            dom_color_hsv = np.full(imgWarpColored.shape, dom_color, dtype='uint8')
+            # convert to bgr color space for display
+            dom_color_bgr = cv2.cvtColor(dom_color_hsv, cv2.COLOR_HSV2BGR)
+            
+            if k == 0:
+                output_image = dom_color_bgr
+            else:
+                # concat input image and dom color square side by side for display
+                output_image = np.hstack((output_image, dom_color_bgr))
+          
+        if i == 0:
+            final_image = output_image
+        else:
+            final_image = np.vstack((final_image,output_image))
+        # show results to screen
+    cv2.imshow('Image Dominant Color', final_image)
+    cv2.waitKey(0)
 
 
     blocks = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]])
     imgBigContour = utlis.drawRectangle(imgBigContour,blocks,2)
     cv2.imwrite("Funtest.jpg",imgBigContour)
-    print(blocks)
-    print(biggest)
-    # LABELS FOR DISPLAY
-    lables = [["Original","Gray","Threshold","Contours"],
-              ["Biggest Contour","Warp Prespective","Warp Gray","Adaptive Threshold"]]
- 
-    stackedImage = utlis.stackImages(imageArray,0.75,lables)
-    cv2.imshow("Result",stackedImage)
- 
-    # SAVE IMAGE WHEN 's' key is pressed
-    if cv2.waitKey() & 0xFF == ord('s'):
-        cv2.imwrite("Scanned/myImage"+str(count)+".jpg",imgWarpColored)
-        cv2.rectangle(stackedImage, ((int(stackedImage.shape[1] / 2) - 230), int(stackedImage.shape[0] / 2) + 50),
-                      (1100, 350), (0, 255, 0), cv2.FILLED)
-        cv2.putText(stackedImage, "Scan Saved", (int(stackedImage.shape[1] / 2) - 200, int(stackedImage.shape[0] / 2)),
-                    cv2.FONT_HERSHEY_DUPLEX, 3, (0, 0, 255), 5, cv2.LINE_AA)
-        cv2.imshow('Result', stackedImage)
-        cv2.waitKey()
-        count += 1
