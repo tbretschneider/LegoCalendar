@@ -72,13 +72,13 @@ if 0 ==0:
         imageArray = ([img,imgGray,imgThreshold,imgContours],
                       [imgBlank, imgBlank, imgBlank, imgBlank])
  
-    xcoordinatecol1 = 10.0 / 1200.0 * widthImg
-    blockwidth = 95.0 / 1200.0 * widthImg
-    blockwidthsep = 30.0 / 1200.0 * widthImg
-    blocksepcol = 109.0 / 1200.0 * widthImg
-    ycoordinaterow1 = 47.5 / 1599.0 * heightImg
-    blockheight = 35.0 / 1599.0 * heightImg
-    blockheightsep = 24.0 / 1599.0 * heightImg
+    xcoordinatecol1 = 10.0 / 1599.0 * widthImg
+    blockwidth = 95.0 / 1599.0 * widthImg
+    blockwidthsep = 30.0 / 1599.0 * widthImg
+    blocksepcol = 109.0 / 1599.0 * widthImg
+    ycoordinaterow1 = 47.5 / 1200.0 * heightImg
+    blockheight = 35.0 / 1200.0 * heightImg
+    blockheightsep = 24.0 / 1200.0 * heightImg
 
     blockrightone = np.array([[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]]])
     blockjumpcolumn = np.array([[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]]])
@@ -89,7 +89,6 @@ if 0 ==0:
         rowdownone.append(blockdownone)
 
     rowdownone = np.array(rowdownone)
-    print("hello")
 
     firstrowcoordinates = np.zeros(10)
     firstrowcoordinates = [blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone,blockdownone]
@@ -107,35 +106,12 @@ if 0 ==0:
         coordinategrid.append(firstrowcoordinates + i * rowdownone)
 
     coordinategrid = np.round(np.array(coordinategrid)).astype(int)
-    print(coordinategrid)
-
-
 
     for i in range(0,20,1):
         for k in range(0,10,1):
-            print(coordinategrid[i][k])
             imgBigContour = utlis.drawRectangle(imgBigContour,np.array(coordinategrid[i][k]),2)
 
 
     blocks = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]])
     imgBigContour = utlis.drawRectangle(imgBigContour,blocks,2)
     cv2.imwrite("Funtest.jpg",imgBigContour)
-    print(blocks)
-    print(biggest)
-    # LABELS FOR DISPLAY
-    lables = [["Original","Gray","Threshold","Contours"],
-              ["Biggest Contour","Warp Prespective","Warp Gray","Adaptive Threshold"]]
- 
-    stackedImage = utlis.stackImages(imageArray,0.75,lables)
-    cv2.imshow("Result",stackedImage)
- 
-    # SAVE IMAGE WHEN 's' key is pressed
-    if cv2.waitKey() & 0xFF == ord('s'):
-        cv2.imwrite("Scanned/myImage"+str(count)+".jpg",imgWarpColored)
-        cv2.rectangle(stackedImage, ((int(stackedImage.shape[1] / 2) - 230), int(stackedImage.shape[0] / 2) + 50),
-                      (1100, 350), (0, 255, 0), cv2.FILLED)
-        cv2.putText(stackedImage, "Scan Saved", (int(stackedImage.shape[1] / 2) - 200, int(stackedImage.shape[0] / 2)),
-                    cv2.FONT_HERSHEY_DUPLEX, 3, (0, 0, 255), 5, cv2.LINE_AA)
-        cv2.imshow('Result', stackedImage)
-        cv2.waitKey()
-        count += 1

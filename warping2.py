@@ -23,8 +23,8 @@ count=0
 if 0 ==0:
  
     #COLOUR BOUNDS
-    lower_color_bounds = np.array([100,100,10],np.uint8)
-    upper_color_bounds = np.array([200,150,110],np.uint8)
+    lower_color_bounds = np.array([120,100,20],np.uint8)
+    upper_color_bounds = np.array([190,140,70],np.uint8)
 
 
     img = cv2.imread(pathImage)
@@ -77,6 +77,8 @@ if 0 ==0:
         imageArray = ([img,imgGray,imgThreshold,imgContours],
                       [imgBlank, imgBlank, imgBlank, imgBlank])
  
+    print(biggest)
+    cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
     # LABELS FOR DISPLAY
     lables = [["Original","Gray","Threshold","Contours"],
               ["Biggest Contour","Warp Prespective","Warp Gray","Adaptive Threshold"]]
