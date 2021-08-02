@@ -14,7 +14,7 @@ cap = cv2.VideoCapture(0)
 cap.set(10,160)
 heightImg = 1200
 widthImg  = 1599
-thres = 40,100
+thres = 60,80
 ########################################################################
  
 utlis.initializeTrackbars()
