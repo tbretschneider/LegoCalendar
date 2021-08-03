@@ -9,12 +9,12 @@ import utlis as utlis
 
 ###############################################################
 
-pathImage = "index.jpeg"
+pathImage = "Calendar1.jpg"
 cap = cv2.VideoCapture(0)
 cap.set(10,160)
 heightImg = 1200
 widthImg  = 1599
-thres = 60,80
+thres = 20,25
 ########################################################################
  
 utlis.initializeTrackbars()
