@@ -10,8 +10,6 @@ import utlis as utlis
 ###############################################################
 
 pathImage = "index.jpeg"
-cap = cv2.VideoCapture(0)
-cap.set(10,160)
 heightImg = 1200
 widthImg  = 1599
 thres = 40,100

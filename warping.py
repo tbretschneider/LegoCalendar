@@ -9,9 +9,9 @@ import utlis
 
 ###############################################################
 
-pathImage = "index.jpeg"
-cap = cv2.VideoCapture(0)
-cap.set(10, 160)
+pathImage = "Calendar1.jpg"
+#cap = cv2.VideoCapture(0)
+#cap.set(10, 160)
 heightImg = 1200
 widthImg  = 1599
 thres = (20, 70)
@@ -54,9 +54,9 @@ if 0 == 0:
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
 
-        #REMOVE 20 PIXELS FORM EACH SIDE
-        imgWarpColored = imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
-        imgWarpColored = cv2.resize(imgWarpColored, (widthImg,heightImg))
+        #REMOVE 20 PIXELS FROM EACH SIDE
+        #imgWarpColored = imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
+        #imgWarpColored = cv2.resize(imgWarpColored, (widthImg,heightImg))
 
         # APPLY ADAPTIVE THRESHOLD
         imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
@@ -107,13 +107,13 @@ if 0 == 0:
         coordinategrid.append(firstrowcoordinates + i * rowdownone)
 
     coordinategrid = np.round(np.array(coordinategrid)).astype(int)
-    print(coordinategrid)
+    #print(coordinategrid)
 
 
 
     for i in range(20):
         for k in range(10):
-            print(coordinategrid[i][k])
+            #print(coordinategrid[i][k])
             imgBigContour = utlis.drawRectangle(imgBigContour, np.array(coordinategrid[i][k]), 2)
 
 

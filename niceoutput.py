@@ -6,19 +6,17 @@ import numpy as np
 from utils.colorutils import get_dominant_color
 import utlis as utlis
 
-
 ###############################################################
 
 pathImage = "Scanned/myImage1.jpg"
-cap = cv2.VideoCapture(0)
-cap.set(10,160)
+#cap = cv2.VideoCapture(0)
+#cap.set(10,160)
 heightImg = 1200
 widthImg  = 1599
 thres = 20,70
 ########################################################################
  
 if 0 ==0:
- 
 
     img = cv2.imread(pathImage)
     img = cv2.resize(img, (widthImg, heightImg)) # RESIZE IMAGE
@@ -112,7 +110,7 @@ if 0 ==0:
             pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
             matrix = cv2.getPerspectiveTransform(pts1, pts2)
             imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
-            imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
+            imgWarpColored = imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
             imgWarpColored = cv2.resize(imgWarpColored,(50,50))
 
             hsv_image = cv2.cvtColor(imgWarpColored, cv2.COLOR_BGR2HSV)
