@@ -1,19 +1,18 @@
 #### Code to warp an image
 ### from computervisionzone
 
+from PIL import Image
 import cv2
 import numpy as np
-
 import utlis as utlis
 
 
 ###############################################################
 
-pathImage = "Scanned/myImage1.jpg"
-cap = cv2.VideoCapture(0)
-cap.set(10,160)
-heightImg = 1200
-widthImg  = 1599
+pathImage = "Scanned/myImage0.jpg"
+img = cv2.imread(pathImage)
+heightImg = 1600
+widthImg  = 1700
 thres = 20,70
 ########################################################################
  
@@ -21,10 +20,7 @@ utlis.initializeTrackbars()
 count=0
  
 if 0 ==0:
- 
 
-    img = cv2.imread(pathImage)
-    img = cv2.resize(img, (widthImg, heightImg)) # RESIZE IMAGE
     imgBlank = np.zeros((heightImg,widthImg, 3), np.uint8) # CREATE A BLANK IMAGE FOR TESTING DEBUGING IF REQUIRED
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # CONVERT IMAGE TO GRAY SCALE
     imgBlur = cv2.GaussianBlur(imgGray, (5, 5), 1) # ADD GAUSSIAN BLUR
@@ -44,33 +40,29 @@ if 0 ==0:
     # FIND THE BIGGEST COUNTOUR
     biggest, maxArea = utlis.biggestContour(contours) # FIND THE BIGGEST CONTOUR
 
-    biggest = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]])
-    if biggest.size != 0:
-        biggest=utlis.reorder(biggest)
-        cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
-        imgBigContour = utlis.drawRectangle(imgBigContour,biggest,2)
-        pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
-        pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
-        matrix = cv2.getPerspectiveTransform(pts1, pts2)
-        imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
- 
-        #REMOVE 20 PIXELS FORM EACH SIDE
-        imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
-        imgWarpColored = cv2.resize(imgWarpColored,(widthImg,heightImg))
+    #biggest = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]]) #got rid of this, what should it do?
+#    if biggest.size != 0:
+ #       biggest=utlis.reorder(biggest)
+  #      cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
+   #     imgBigContour = utlis.drawRectangle(imgBigContour,biggest,2)
+    #    pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
+     #   pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
+      #  matrix = cv2.getPerspectiveTransform(pts1, pts2)
+       # imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
  
         # APPLY ADAPTIVE THRESHOLD
-        imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
-        imgAdaptiveThre= cv2.adaptiveThreshold(imgWarpGray, 255, 1, 1, 7, 2)
-        imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
-        imgAdaptiveThre=cv2.medianBlur(imgAdaptiveThre,3)
+#        imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
+ #       imgAdaptiveThre= cv2.adaptiveThreshold(imgWarpGray, 255, 1, 1, 7, 2)
+  #      imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
+   #     imgAdaptiveThre=cv2.medianBlur(imgAdaptiveThre,3)
  
         # Image Array for Display
-        imageArray = ([img,imgGray,imgThreshold,imgContours],
-                      [imgBigContour,imgWarpColored, imgWarpGray,imgAdaptiveThre])
+    #    imageArray = ([img,imgGray,imgThreshold,imgContours],
+     #                 [imgBigContour,imgWarpColored, imgWarpGray,imgAdaptiveThre])
  
-    else:
-        imageArray = ([img,imgGray,imgThreshold,imgContours],
-                      [imgBlank, imgBlank, imgBlank, imgBlank])
+#    else:
+ #       imageArray = ([img,imgGray,imgThreshold,imgContours],
+  #                    [imgBlank, imgBlank, imgBlank, imgBlank])
  
     xcoordinatecol1 = 10.0 / 1599.0 * widthImg
     blockwidth = 95.0 / 1599.0 * widthImg
@@ -85,6 +77,7 @@ if 0 ==0:
     blockdownone = np.array([[[0, blockheight + blockheightsep]],[[0, blockheight + blockheightsep]],[[0, blockheight + blockheightsep]],[[0, blockheight + blockheightsep]]])
 
     rowdownone = []
+
     for i in [1,2,3,4,5,6,7,8,9,10]:
         rowdownone.append(blockdownone)
 
@@ -118,7 +111,19 @@ if 0 ==0:
             imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
             imgWarpColored = cv2.resize(imgWarpColored,(50,50))
             cv2.imwrite("Scanned/myImage("+str(i)+","+str(k)+").jpg",imgWarpColored)
-
+#####
+            
+    for i in range(20):
+        for k in range(10):
+            #print(coordinategrid[i][k])
+            imgBigContour = utlis.drawRectangle(imgBigContour, np.array(coordinategrid[i][k]), 2)
+    blocks = np.array([[[10, 48]], [[102, 48]], [[10, 82]], [[102, 82]]])
+    imgBigContour = utlis.drawRectangle(imgBigContour, blocks, 2)
+    cv2.imwrite("Funtest.jpg", imgBigContour)
+    image = Image.open("Funtest.jpg")
+    image.show()
+    
+#####
     blocks = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]])
     imgBigContour = utlis.drawRectangle(imgBigContour,blocks,2)
     cv2.imwrite("Funtest.jpg",imgBigContour)

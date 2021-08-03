@@ -1,27 +1,26 @@
 #### Code to warp an image
 ### from computervisionzone
+#convert this into a code that creates 4 wraped images
 
 import cv2
 import numpy as np
-
 import utlis as utlis
 
 
 ###############################################################
 
-pathImage = "Calendar1.jpg"
-cap = cv2.VideoCapture(0)
-cap.set(10,160)
+pathImage = "Calendar2.jpg"
+#heightImg, widthImg = pathImage.size()
 heightImg = 1200
-widthImg  = 1599
+widthImg = 600
+
 thres = 20,25
 ########################################################################
  
 utlis.initializeTrackbars()
 count=0
  
-if 0 ==0:
- 
+if 0 == 0:
 
     img = cv2.imread(pathImage)
     img = cv2.resize(img, (widthImg, heightImg)) # RESIZE IMAGE
@@ -57,10 +56,7 @@ if 0 ==0:
         matrix = cv2.getPerspectiveTransform(pts1, pts2)
         imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
  
-        #REMOVE 20 PIXELS FORM EACH SIDE
-        imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
-        imgWarpColored = cv2.resize(imgWarpColored,(widthImg,heightImg))
-
+    
         for i in [0,1,2,3]:
             peri = cv2.arcLength(sortedcontours[i], True)
             approx = cv2.approxPolyDP(sortedcontours[i], 0.02 * peri, True)
@@ -75,7 +71,6 @@ if 0 ==0:
             imgWarpColored = cv2.resize(imgWarpColored,(widthImg,heightImg))
             cv2.imwrite("Scanned/myImage"+str(i)+".jpg",imgWarpColored)
             
-
 
         # APPLY ADAPTIVE THRESHOLD
         imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
