@@ -15,6 +15,7 @@ img = cv2.imread(pathImage)
 heightImg = 1600
 widthImg  = 1700
 thres = 20,70
+kernel = np.ones((5, 5))
 
 img = cv2.resize(img, (widthImg, heightImg))
 ########################################################################
@@ -23,7 +24,7 @@ utlis.initializeTrackbars()
 count=0
  
 if 0 ==0:
-
+    imgBlank = np.zeros((heightImg,widthImg, 3), np.uint8) # CREATE A BLANK IMAGE FOR TESTING DEBUGING IF REQUIRED
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # CONVERT IMAGE TO GRAY SCALE
     imgBlur = cv2.GaussianBlur(imgGray, (5, 5), 1) # ADD GAUSSIAN BLUR
     # thres=utlis.valTrackbars() # GET TRACK BAR VALUES FOR THRESHOLDS
@@ -42,28 +43,28 @@ if 0 ==0:
     biggest, maxArea = utlis.biggestContour(contours) # FIND THE BIGGEST CONTOUR
 
     #biggest = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]]) #got rid of this, what should it do?
-#    if biggest.size != 0:
- #       biggest=utlis.reorder(biggest)
-  #      cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
-   #     imgBigContour = utlis.drawRectangle(imgBigContour,biggest,2)
-    #    pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
-     #   pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
-      #  matrix = cv2.getPerspectiveTransform(pts1, pts2)
-       # imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
+    if biggest.size != 0:
+        biggest=utlis.reorder(biggest)
+        cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
+        imgBigContour = utlis.drawRectangle(imgBigContour,biggest,2)
+        pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
+        pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
+        matrix = cv2.getPerspectiveTransform(pts1, pts2)
+        imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
  
         # APPLY ADAPTIVE THRESHOLD
-#        imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
- #       imgAdaptiveThre= cv2.adaptiveThreshold(imgWarpGray, 255, 1, 1, 7, 2)
-  #      imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
-   #     imgAdaptiveThre=cv2.medianBlur(imgAdaptiveThre,3)
+        imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
+        imgAdaptiveThre= cv2.adaptiveThreshold(imgWarpGray, 255, 1, 1, 7, 2)
+        imgAdaptiveThre = cv2.bitwise_not(imgAdaptiveThre)
+        imgAdaptiveThre=cv2.medianBlur(imgAdaptiveThre,3)
  
         # Image Array for Display
-    #    imageArray = ([img,imgGray,imgThreshold,imgContours],
-     #                 [imgBigContour,imgWarpColored, imgWarpGray,imgAdaptiveThre])
+        imageArray = ([img,imgGray,imgThreshold,imgContours],
+                      [imgBigContour,imgWarpColored, imgWarpGray,imgAdaptiveThre])
  
-#    else:
- #       imageArray = ([img,imgGray,imgThreshold,imgContours],
-  #                    [imgBlank, imgBlank, imgBlank, imgBlank])
+    else:
+        imageArray = ([img,imgGray,imgThreshold,imgContours],
+                      [imgBlank, imgBlank, imgBlank, imgBlank])
  
     xcoordinatecol1 = 10.0 / 1599.0 * widthImg
     blockwidth = 95.0 / 1599.0 * widthImg
