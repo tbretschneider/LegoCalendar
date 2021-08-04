@@ -14,7 +14,7 @@ pathImage = "Calendar2.jpg"
 heightImg = 1200
 widthImg = 600
 
-thres = 20,25
+thres = 10,11
 ########################################################################
  
 utlis.initializeTrackbars()

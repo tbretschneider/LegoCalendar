@@ -9,11 +9,14 @@ import utlis as utlis
 
 ###############################################################
 
-pathImage = "Scanned/myImage0.jpg"
+pathImage = "myImage0.jpg"
 img = cv2.imread(pathImage)
+
 heightImg = 1600
 widthImg  = 1700
 thres = 20,70
+
+img = cv2.resize(img, (widthImg, heightImg))
 ########################################################################
  
 utlis.initializeTrackbars()
@@ -21,12 +24,10 @@ count=0
  
 if 0 ==0:
 
-    imgBlank = np.zeros((heightImg,widthImg, 3), np.uint8) # CREATE A BLANK IMAGE FOR TESTING DEBUGING IF REQUIRED
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # CONVERT IMAGE TO GRAY SCALE
     imgBlur = cv2.GaussianBlur(imgGray, (5, 5), 1) # ADD GAUSSIAN BLUR
     # thres=utlis.valTrackbars() # GET TRACK BAR VALUES FOR THRESHOLDS
     imgThreshold = cv2.Canny(imgBlur,thres[0],thres[1]) # APPLY CANNY BLUR
-    kernel = np.ones((5, 5))
     imgDial = cv2.dilate(imgThreshold, kernel, iterations=2) # APPLY DILATION
     imgThreshold = cv2.erode(imgDial, kernel, iterations=1)  # APPLY EROSION
  

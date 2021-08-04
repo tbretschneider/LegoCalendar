@@ -33,3 +33,5 @@ Error in code
 addgridexample.py
 adds numerical grid to an image
 
+drawSquares.py
+Finds the vertical location of the blocks in a pre warped image
