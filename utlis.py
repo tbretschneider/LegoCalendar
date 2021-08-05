@@ -3,7 +3,11 @@
 
 import cv2
 import numpy as np
- 
+
+from colormath.color_objects import sRGBColor, LabColor
+from colormath.color_conversions import convert_color
+from colormath.color_diff import delta_e_cie2000
+
 ## TO STACK ALL THE IMAGES IN ONE WINDOW
 def stackImages(imgArray,scale,lables=[]):
     rows = len(imgArray)
@@ -40,7 +44,8 @@ def stackImages(imgArray,scale,lables=[]):
                 cv2.rectangle(ver,(c*eachImgWidth,eachImgHeight*d),(c*eachImgWidth+len(lables[d])*13+27,30+eachImgHeight*d),(255,255,255),cv2.FILLED)
                 cv2.putText(ver,lables[d][c],(eachImgWidth*c+10,eachImgHeight*d+20),cv2.FONT_HERSHEY_COMPLEX,0.7,(255,0,255),2)
     return ver
- 
+
+# Reorder points for rectangles
 def reorder(myPoints):
  
     myPoints = myPoints.reshape((4, 2))
@@ -54,8 +59,8 @@ def reorder(myPoints):
     myPointsNew[2] = myPoints[np.argmax(diff)]
  
     return myPointsNew
- 
 
+# Find largest contour
 def biggestContour(contours):
     biggest = np.array([])
     max_area = 0
@@ -91,3 +96,22 @@ def valTrackbars():
     Threshold2 = cv2.getTrackbarPos("Threshold2", "Trackbars")
     src = Threshold1,Threshold2
     return src
+
+# Identify which project matches the colour
+def colorcompare(color1, color2):
+    delta_e = delta_e_cie2000(color1_lab, color2_lab)
+    print("difference between colours is", delta_e)
+    return delta_e
+
+# create array for colours from the projects
+# compare each element in the array to the test colour
+def projectCompare(projectColours, dom_color, projectNames):
+    alldiff = []
+    for i in projectColours:
+        delta_e = colorcompare(projects[i],dom_color)
+        alldiff.append(delta_e)
+    matchIndex = np.argmin(alldiff)
+    project = projectNames[matchIndex]
+    return project
+    
+    

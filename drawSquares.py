@@ -44,12 +44,14 @@ for i in range(legoNumX):
          d.line([(locationX,0),(locationX,height)], fill=(0,0,255), width=2)
          locationX += stepX2
          coordinatesX.append(locationX)
-img.show
 
-for i in range(21):
-    for k in range(10):
-        imCrop = imgCV(locationX[k]:locationX[k]+5,locationY[i]:locationY[i]-5))
-        imCrop.save("Scanned/myImage("+str(i)+","+str(k)+").jpg", quality=95)
+print(coordinatesX, coordinatesY)
+img.show()
+
+#for i in range(21):
+   # for k in range(10):
+        #imCrop = imgCV(locationX[k]:locationX[k]+5,locationY[i]:locationY[i]-5))
+        #imCrop.save("Scanned/myImage("+str(i)+","+str(k)+").jpg", quality=95)
         
         #imgRect = utlis.drawRectangle(img,locationX[k],locationY[i],2)
         #biggest = np.array(coordinategrid[i][k])

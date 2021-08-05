@@ -8,7 +8,7 @@ niceoutput.py
 Outputs image with squares of the average colour for each part of the grid
 
 rasterarray.py
-No output, but saves images
+Saves images
 Code to create the grid and output individual images of squares
 Draws grid on image
 
