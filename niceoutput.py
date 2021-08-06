@@ -4,6 +4,7 @@
 import cv2
 import numpy as np
 from utils.colorutils import get_dominant_color
+#from colorutils import Color
 import utlis as utlis
 
 ###############################################################
@@ -19,7 +20,7 @@ thres = 20,70
 if 0 ==0:
 
     img = cv2.imread(pathImage)
-    img = cv2.resize(img, (widthImg, heightImg)) # RESIZE IMAGE
+    #img = cv2.resize(img, (widthImg, heightImg)) # RESIZE IMAGE
     imgBlank = np.zeros((heightImg,widthImg, 3), np.uint8) # CREATE A BLANK IMAGE FOR TESTING DEBUGING IF REQUIRED
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # CONVERT IMAGE TO GRAY SCALE
     imgBlur = cv2.GaussianBlur(imgGray, (5, 5), 1) # ADD GAUSSIAN BLUR

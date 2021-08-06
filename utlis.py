@@ -4,9 +4,9 @@
 import cv2
 import numpy as np
 
-from colormath.color_objects import sRGBColor, LabColor
-from colormath.color_conversions import convert_color
-from colormath.color_diff import delta_e_cie2000
+#from colormath.color_objects import sRGBColor, LabColor
+#from colormath.color_conversions import convert_color
+#from colormath.color_diff import delta_e_cie2000
 
 ## TO STACK ALL THE IMAGES IN ONE WINDOW
 def stackImages(imgArray,scale,lables=[]):
@@ -97,21 +97,15 @@ def valTrackbars():
     src = Threshold1,Threshold2
     return src
 
-# Identify which project matches the colour
-def colorcompare(color1, color2):
-    delta_e = delta_e_cie2000(color1_lab, color2_lab)
-    print("difference between colours is", delta_e)
-    return delta_e
+#identify which project matches the color
+def colordifference(color1,projectcolors):
+    diff = []
+    for i in range(len(projectcolors))   :
+        color2 = projectcolors[i]
+        dsquare = (color1[0]-color2[0])**2 + (color1[1]-color2[1])**2 + (color1[2]-color2[2])**2
+        diff.append(dsquare)
+    min_value = min(diff)
+    indexMin = diff.index(min_value)
+    return indexMin
 
-# create array for colours from the projects
-# compare each element in the array to the test colour
-def projectCompare(projectColours, dom_color, projectNames):
-    alldiff = []
-    for i in projectColours:
-        delta_e = colorcompare(projects[i],dom_color)
-        alldiff.append(delta_e)
-    matchIndex = np.argmin(alldiff)
-    project = projectNames[matchIndex]
-    return project
-    
     

@@ -9,12 +9,12 @@ import utlis as utlis
 
 ###############################################################
 
-pathImage = "Calendar2.jpg"
+pathImage = "Calendar5.jpg"
 #heightImg, widthImg = pathImage.size()
 heightImg = 1200
 widthImg = 600
 
-thres = 10,11
+thres = 41,55
 ########################################################################
  
 utlis.initializeTrackbars()

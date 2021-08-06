@@ -5,6 +5,8 @@ from PIL import Image
 import cv2
 import numpy as np
 import utlis as utlis
+from utils.colorutils import get_dominant_color
+from utlis import colordifference
 
 
 ###############################################################
@@ -12,12 +14,15 @@ import utlis as utlis
 pathImage = "myImage0.jpg"
 img = cv2.imread(pathImage)
 
-heightImg = 1600
-widthImg  = 1700
+heightImg = 1000
+widthImg  = 1000
 thres = 20,70
 kernel = np.ones((5, 5))
 
 img = cv2.resize(img, (widthImg, heightImg))
+projectcolors = [[127.45962732919253, 137.84472049689435, 106.91191417278377], [110.84514592019059, 201.0893388921979, 137.45503275759376], [38.1497388276262, 146.5664538595472, 153.54439930354033], [78.51629726206, 187.3344198174703, 85.73207301173407], [129.17367788461542, 101.1256009615384, 109.02584134615388], [109.98521256931608, 19.2144177449168, 145.6441774491683]]
+projects = ["purple","darkGreen","lightGreen","darkBlue","lightBlue","grey"]
+
 ########################################################################
  
 utlis.initializeTrackbars()
@@ -66,13 +71,13 @@ if 0 ==0:
         imageArray = ([img,imgGray,imgThreshold,imgContours],
                       [imgBlank, imgBlank, imgBlank, imgBlank])
  
-    xcoordinatecol1 = 10.0 / 1599.0 * widthImg
-    blockwidth = 95.0 / 1599.0 * widthImg
-    blockwidthsep = 30.0 / 1599.0 * widthImg
-    blocksepcol = 109.0 / 1599.0 * widthImg
-    ycoordinaterow1 = 47.5 / 1200.0 * heightImg
-    blockheight = 35.0 / 1200.0 * heightImg
-    blockheightsep = 24.0 / 1200.0 * heightImg
+    xcoordinatecol1 = 100.0 / 1599.0 * widthImg
+    blockwidth = 70.0 / 1599.0 * widthImg
+    blockwidthsep = 40.0 / 1599.0 * widthImg
+    blocksepcol = 120.0 / 1599.0 * widthImg
+    ycoordinaterow1 = 69. / 1200.0 * heightImg
+    blockheight = 20.0 / 1200.0 * heightImg
+    blockheightsep = 34 / 1200.0 * heightImg
 
     blockrightone = np.array([[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]]])
     blockjumpcolumn = np.array([[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]]])
@@ -97,12 +102,12 @@ if 0 ==0:
 
     coordinategrid = []
 
-    for i in range(0,20,1):
+    for i in range(0,21,1):
         coordinategrid.append(firstrowcoordinates + i * rowdownone)
 
     coordinategrid = np.round(np.array(coordinategrid)).astype(int)
 
-    for i in range(0,20,1):
+    for i in range(0,21,1):
         for k in range(0,10,1):
             imgBigContour = utlis.drawRectangle(imgBigContour,np.array(coordinategrid[i][k]),2)
             biggest = np.array(coordinategrid[i][k])
@@ -115,7 +120,7 @@ if 0 ==0:
             cv2.imwrite("Scanned/myImage("+str(i)+","+str(k)+").jpg",imgWarpColored)
 #####
             
-    for i in range(20):
+    for i in range(21):
         for k in range(10):
             #print(coordinategrid[i][k])
             imgBigContour = utlis.drawRectangle(imgBigContour, np.array(coordinategrid[i][k]), 2)
@@ -123,9 +128,64 @@ if 0 ==0:
     imgBigContour = utlis.drawRectangle(imgBigContour, blocks, 2)
     cv2.imwrite("Funtest.jpg", imgBigContour)
     image = Image.open("Funtest.jpg")
-    image.show()
+    #image.show()
     
 #####
     blocks = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]])
     imgBigContour = utlis.drawRectangle(imgBigContour,blocks,2)
-    cv2.imwrite("Funtest.jpg",imgBigContour)
+    #cv2.imwrite("Funtest.jpg",imgBigContour)
+
+# using get dominant colour to output dominant colour for each squre- nice output
+allColors = []
+
+if 0 ==0:
+    for i in range(0,21,1):
+        for k in range(0,10,1):
+            imgBigContour = utlis.drawRectangle(imgBigContour,np.array(coordinategrid[i][k]),2)
+            biggest = np.array(coordinategrid[i][k])
+            pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
+            pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
+            matrix = cv2.getPerspectiveTransform(pts1, pts2)
+            imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
+            imgWarpColored = imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
+            imgWarpColored = cv2.resize(imgWarpColored,(50,50))
+
+            hsv_image = cv2.cvtColor(imgWarpColored, cv2.COLOR_BGR2HSV)
+
+            # extract dominant color
+            # (aka the centroid of the most popular k means cluster)
+            dom_color = get_dominant_color(hsv_image, k=3)
+            allColors.append(dom_color)
+
+            
+            # create a square showing dominant color of equal size to input image
+            dom_color_hsv = np.full(imgWarpColored.shape, dom_color, dtype='uint8')
+            # convert to bgr color space for display
+            dom_color_bgr = cv2.cvtColor(dom_color_hsv, cv2.COLOR_HSV2BGR)
+            
+            if k == 0:
+                output_image = dom_color_bgr
+            else:
+                # concat input image and dom color square side by side for display
+                output_image = np.hstack((output_image, dom_color_bgr))
+          
+        if i == 0:
+            final_image = output_image
+        else:
+            final_image = np.vstack((final_image,output_image))
+        # show results to screen
+    #cv2.imshow('Image Dominant Color', final_image)
+    #cv2.waitKey(0)
+
+calendarNames = []
+for i in range(len(allColors)):
+    index = colordifference(allColors[i],projectcolors)
+    calendarNames.append(projects[index])
+    
+#### define project colours
+print(calendarNames)
+
+
+
+
+
