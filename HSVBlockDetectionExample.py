@@ -7,14 +7,15 @@ import cv2
 def main():
     # define the boundaries as HSV
     # these will need tweaking for the specific colours needed
-    boundaries=(((15, 20, 20), (35, 255, 255)), #yellow
-                ((36, 20, 20), (80, 255, 255)), #green
-                ((81, 50, 50), (155, 255, 255)), #blue
+    boundaries=(((28, 50, 45), (42, 80, 75)), # light green
+                ((36, 20, 20), (80, 255, 255)), #dark green
+                ((90, 90, 90), (120, 230, 230)), #blue
+                ((80, 50, 20),(110, 255, 255)), #light blue
                 )
 
     #kernel for removing tiny islands
     #increse values to remove larger islands, decrease if relevant blocks are being removed
-    kernelOpen = np.ones((12, 12))
+    kernelOpen = np.ones((8, 8))
     #kernel for closing gaps
     #increase if blocks have gaps, decrease is blocks are being merged together
     kernelClose = np.ones((3, 3))
@@ -22,7 +23,7 @@ def main():
 
     image = cv2.imread('Calendar1.jpg') #load image
     image = cv2.resize(image, (900, 700), interpolation=cv2.INTER_LINEAR)
-    #image = cv2.GaussianBlur(image, (5,5), 0)
+    image = cv2.GaussianBlur(image, (5,5), 0)
     image2 = cv2.cvtColor(image, cv2.COLOR_BGR2HSV) #convert to HSV for easier colour processing
 
     lower_bounds = []
@@ -59,7 +60,7 @@ def main():
         for cont in conts[colour]: #go through each block of that colour
             x,y,w,h = cv2.boundingRect(cont) #make a rectagle which surounds the contour
             cv2.rectangle(image2, (x, y), (x + w, y + h), (0, 255,0), 2) #find the centre
-            print((x, y), colour)
+            #print((x, y), colour)
 
 
     # show the images
@@ -71,7 +72,7 @@ def main():
     cv2.destroyAllWindows()
 
 
-
+    #print(images)
 
 if __name__ == '__main__':
         main()
