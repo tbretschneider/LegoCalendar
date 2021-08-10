@@ -11,7 +11,7 @@ from utlis import colordifference
 
 ###############################################################
 
-pathImage = "myImage0.jpg"
+pathImage = "Scanned/myImage0.jpg"
 img = cv2.imread(pathImage)
 
 heightImg = 1000
@@ -128,7 +128,7 @@ if 0 ==0:
     imgBigContour = utlis.drawRectangle(imgBigContour, blocks, 2)
     cv2.imwrite("Funtest.jpg", imgBigContour)
     image = Image.open("Funtest.jpg")
-    #image.show()
+    image.show()
     
 #####
     blocks = np.array([[[10, 48]],[[102, 48]],[[10, 82]],[[102, 82]]])

@@ -9,9 +9,9 @@ import utlis as utlis
 
 ###############################################################
 
-pathImage = "index.jpeg"
-heightImg = 1200
-widthImg  = 1599
+pathImage = "Calendar7.jpg"
+heightImg = 1000
+widthImg  = 1000
 thres = 40,100
 ########################################################################
  
@@ -59,19 +59,19 @@ if 0 ==0:
         imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
         imgWarpColored = cv2.resize(imgWarpColored,(widthImg,heightImg))
 
-#        for i in [0,1,2,3]:
- #           peri = cv2.arcLength(sortedcontours[i], True)
-  #          approx = cv2.approxPolyDP(sortedcontours[i], 0.02 * peri, True)
-   #         biggest=utlis.reorder(approx)
-    #        cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
-     #       imgBigContour = utlis.drawRectangle(imgBigContour,biggest,2)
-#            pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
- #           pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
-  #          matrix = cv2.getPerspectiveTransform(pts1, pts2)
-   #         imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
-    #        imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
-     #       imgWarpColored = cv2.resize(imgWarpColored,(widthImg,heightImg))
-      #      cv2.imwrite("Scanned/myImage"+str(i)+".jpg",imgWarpColored)
+        for i in [0,1,2,3]:
+            peri = cv2.arcLength(sortedcontours[i], True)
+            approx = cv2.approxPolyDP(sortedcontours[i], 0.02 * peri, True)
+            biggest=utlis.reorder(approx)
+            cv2.drawContours(imgBigContour, biggest, -1, (0, 255, 0), 20) # DRAW THE BIGGEST CONTOUR
+            imgBigContour = utlis.drawRectangle(imgBigContour,biggest,2)
+            pts1 = np.float32(biggest) # PREPARE POINTS FOR WARP
+            pts2 = np.float32([[0, 0],[widthImg, 0], [0, heightImg],[widthImg, heightImg]]) # PREPARE POINTS FOR WARP
+            matrix = cv2.getPerspectiveTransform(pts1, pts2)
+            imgWarpColored = cv2.warpPerspective(img, matrix, (widthImg, heightImg))
+            imgWarpColored=imgWarpColored[20:imgWarpColored.shape[0] - 20, 20:imgWarpColored.shape[1] - 20]
+            imgWarpColored = cv2.resize(imgWarpColored,(widthImg,heightImg))
+            cv2.imwrite("Scanned/myImage"+str(i)+".jpg",imgWarpColored)
             
 
 
