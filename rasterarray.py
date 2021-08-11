@@ -7,7 +7,7 @@ import numpy as np
 import utlis as utlis
 from utils.colorutils import get_dominant_color
 from utlis import colordifference
-
+from ProjectColorIdentify import projectColorIdentify
 
 ###############################################################
 
@@ -20,15 +20,15 @@ thres = 20,70
 kernel = np.ones((5, 5))
 
 img = cv2.resize(img, (widthImg, heightImg))
-projectcolors = [[127.45962732919253, 137.84472049689435, 106.91191417278377], [110.84514592019059, 201.0893388921979, 137.45503275759376], [38.1497388276262, 146.5664538595472, 153.54439930354033], [78.51629726206, 187.3344198174703, 85.73207301173407], [129.17367788461542, 101.1256009615384, 109.02584134615388], [109.98521256931608, 19.2144177449168, 145.6441774491683]]
-projects = ["purple","darkGreen","lightGreen","darkBlue","lightBlue","grey"]
+projectColors = projectColorIdentify()
+projects = ["lightGreen","darkGreen","lightBlue","darkgreen","brown","darkBlue","purple"]
 
 ########################################################################
  
 utlis.initializeTrackbars()
 count=0
  
-if 0 ==0:
+if 0 == 0:
     imgBlank = np.zeros((heightImg,widthImg, 3), np.uint8) # CREATE A BLANK IMAGE FOR TESTING DEBUGING IF REQUIRED
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # CONVERT IMAGE TO GRAY SCALE
     imgBlur = cv2.GaussianBlur(imgGray, (5, 5), 1) # ADD GAUSSIAN BLUR
@@ -71,13 +71,13 @@ if 0 ==0:
         imageArray = ([img,imgGray,imgThreshold,imgContours],
                       [imgBlank, imgBlank, imgBlank, imgBlank])
  
-    xcoordinatecol1 = 100.0 / 1599.0 * widthImg
+    xcoordinatecol1 = 19.0 / 1599.0 * widthImg
     blockwidth = 70.0 / 1599.0 * widthImg
-    blockwidthsep = 40.0 / 1599.0 * widthImg
-    blocksepcol = 120.0 / 1599.0 * widthImg
-    ycoordinaterow1 = 69. / 1200.0 * heightImg
+    blockwidthsep = 70.0 / 1599.0 * widthImg
+    blocksepcol = 126.0 / 1599.0 * widthImg
+    ycoordinaterow1 = 40 / 1200.0 * heightImg
     blockheight = 20.0 / 1200.0 * heightImg
-    blockheightsep = 34 / 1200.0 * heightImg
+    blockheightsep = 37 / 1200.0 * heightImg
 
     blockrightone = np.array([[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]],[[blockwidthsep + blockwidth, 0]]])
     blockjumpcolumn = np.array([[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]],[[blockwidth + blocksepcol, 0]]])
@@ -138,7 +138,7 @@ if 0 ==0:
 # using get dominant colour to output dominant colour for each squre- nice output
 allColors = []
 
-if 0 ==0:
+if 0 == 0:
     for i in range(0,21,1):
         for k in range(0,10,1):
             imgBigContour = utlis.drawRectangle(imgBigContour,np.array(coordinategrid[i][k]),2)
