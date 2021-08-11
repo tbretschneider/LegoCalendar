@@ -8,9 +8,11 @@ import utlis as utlis
 from utils.colorutils import get_dominant_color
 from utlis import colordifference
 from ProjectColorIdentify import projectColorIdentify
+from gridsplitanddetect import gridsplitanddetect
 
 ###############################################################
 
+gridsplitanddetect()
 pathImage = "Scanned/myImage0.jpg"
 img = cv2.imread(pathImage)
 
