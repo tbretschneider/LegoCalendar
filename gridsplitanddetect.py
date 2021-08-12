@@ -1,7 +1,7 @@
 #### Code to warp an image
 ### from computervisionzone
 
-def gridsplitanddetect():
+def gridsplitanddetect(pathImage):
 
     import cv2
     import numpy as np
@@ -11,7 +11,6 @@ def gridsplitanddetect():
 
     ###############################################################
 
-    pathImage = "Calendar7.jpg"
     heightImg = 1000
     widthImg  = 1000
     thres = 40,100
@@ -96,7 +95,7 @@ def gridsplitanddetect():
                   ["Biggest Contour","Warp Prespective","Warp Gray","Adaptive Threshold"]]
      
         stackedImage = utlis.stackImages(imageArray,0.75,lables)
-        cv2.imshow("Result",stackedImage)
+        #cv2.imshow("Result",stackedImage)
      
         # SAVE IMAGE WHEN 's' key is pressed
         if cv2.waitKey() & 0xFF == ord('s'):
