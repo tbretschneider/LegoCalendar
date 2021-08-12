@@ -14,14 +14,25 @@ e.insert(0,"")
 
 def myClick():
     projectNum = int(e.get())
-    for i in range(projectNum):
-        myLabel = Label(root, text = "well done")
-        myLabel.pack()
+    myLabel = Label(root, text = "what are the projects?")
+    myLabel.pack()
 
-myButton = Button(root, text = "Enter Your Name", command = myClick)
+    projects = []
+    
+    for i in range(projectNum):
+        e1 = Entry(root, width = 50)
+        e1.pack()
+        e1.insert(0,"")
+        projects.append(e1.get())
+    myButton = Button(root, text = "Submit", command = myClick)
+    myButton.pack()
+
+    return projects
+        
+myButton = Button(root, text = "Submit", command = myClick)
 myButton.pack()
 
-myLabel2 = Label(root, text = "Hi there")
-myLabel2.pack()
 
 root.mainloop()
+
+print(projects)
